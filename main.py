@@ -3,15 +3,12 @@ from openai import OpenAI
 import os
 import time
 
-# --- Configuration ---
 API_KEY = os.getenv("OPENAI_API_KEY", "")
 client = OpenAI(api_key=API_KEY)
 
-# --- Session State ---
 if 'messages' not in st.session_state:
     st.session_state.messages = []
-
-# --- Custom CSS for Simple Stylish Design ---
+    
 page_style = """
 <style>
 /* Main styling */
@@ -279,10 +276,8 @@ body, .stApp {
 
 st.markdown(page_style, unsafe_allow_html=True)
 
-# --- Main Content ---
 st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-# Header
 st.markdown("""
 <div class="header">
     <h1 class="title">Math Tutor</h1>
@@ -290,7 +285,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Examples
 st.markdown('<div class="examples">', unsafe_allow_html=True)
 st.markdown('<div class="examples-title">Try these examples:</div>', unsafe_allow_html=True)
 
@@ -309,11 +303,9 @@ for i, example in enumerate(examples):
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Chat container
 with st.container():
     st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-    
-    # Display messages
+ 
     if not st.session_state.messages:
         st.markdown("""
         <div class="empty-state">
@@ -346,9 +338,8 @@ with st.container():
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Input area
 with st.form("chat_form", clear_on_submit=True):
-    # Get example question if selected
+   
     if "example_question" in st.session_state:
         user_input = st.text_input("Ask your math question:", value=st.session_state.example_question, key="question_input")
         del st.session_state.example_question
@@ -358,10 +349,9 @@ with st.form("chat_form", clear_on_submit=True):
     submitted = st.form_submit_button("Send", use_container_width=True)
 
     if submitted and user_input:
-        # Add user message
+     
         st.session_state.messages.append({"role": "user", "content": user_input})
-        
-        # Get bot response
+      
         with st.spinner("Thinking..."):
             try:
                 response = client.chat.completions.create(
@@ -381,7 +371,6 @@ with st.form("chat_form", clear_on_submit=True):
         
         st.rerun()
 
-# Controls
 st.markdown('<div class="controls">', unsafe_allow_html=True)
 if st.button("Clear Conversation", key="clear_btn"):
     st.session_state.messages = []
